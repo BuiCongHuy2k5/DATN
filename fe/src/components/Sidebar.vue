@@ -1,0 +1,220 @@
+<template>
+  <nav id="sidebar">
+    <div class="sidebar-header">
+      <img src="/img/logo/logo.jpeg" alt="Nexvibe Logo">
+      <div class="user-info" v-if="auth.isAuthenticated">
+        <span class="user-name">Xin chào, {{ auth.user?.tenNV || auth.user?.taiKhoan }}</span>
+      </div>
+    </div>
+
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <router-link to="/admin/dashboard" class="nav-link"><i class="fas fa-fw fa-tachometer-alt"></i> Dashboard</router-link>
+      </li>
+      <li class="nav-item">
+        <router-link to="/admin/pos" class="nav-link"><i class="fas fa-fw fa-cash-register"></i> Bán hàng tại quầy</router-link>
+      </li>
+      
+      <li class="nav-item-header">CỬA HÀNG</li>
+      <li class="nav-item">
+        <router-link to="/admin/products" class="nav-link"><i class="fas fa-fw fa-shirt"></i> Quản lý Sản phẩm</router-link>
+      </li>
+      <li class="nav-item">
+        <router-link to="/admin/orders" class="nav-link"><i class="fas fa-fw fa-box-open"></i> Quản lý Đơn hàng</router-link>
+      </li>
+      <li class="nav-item-header">Giảm giá</li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#vouchersSubmenu" role="button">
+          <i class="fa-solid fa-ticket"></i> Quản lý giảm giá
+        </a>
+        <div class="collapse sidebar-submenu" id="vouchersSubmenu">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <router-link to="/admin/vouchers" class="nav-link">Đợt giảm giá</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="/admin/vouchersp" class="nav-link">Phiếu giảm giá</router-link>
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <router-link to="/admin/attributes" class="nav-link"><i class="fas fa-fw fa-tags"></i> Quản lý Thuộc tính</router-link>
+      </li>
+
+      <li class="nav-item-header">Account</li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#accountsSubmenu" role="button">
+          <i class="fas fa-fw fa-users-cog"></i> Quản lý Tài khoản
+        </a>
+        <div class="collapse sidebar-submenu" id="accountsSubmenu">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <router-link to="/admin/staff" class="nav-link">Nhân viên</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="/admin/customers" class="nav-link">Khách hàng</router-link>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" @click="logout"><i class="fas fa-fw fa-sign-out-alt"></i> Đăng xuất</a>
+      </li>
+    </ul>
+  </nav>
+</template>
+
+<script>
+import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
+
+export default {
+  setup() {
+    const auth = useAuthStore();
+    const router = useRouter();
+
+    const logout = async () => {
+      await auth.logout();
+      router.push('/login');
+    };
+
+    return { auth, logout };
+  }
+};
+</script>
+
+<style scoped>
+/* Không cần thay đổi CSS */
+.user-info {
+  text-align: center;
+  padding: 10px;
+  color: #fff;
+  font-size: 0.9rem;
+}
+.user-name {
+  font-weight: bold;
+}
+.nav-link:hover {
+  background-color: rgba(56, 189, 248, 0.1);
+  color: #38bdf8;
+}
+.nav-link.router-link-exact-active {
+  background-color: rgba(56, 189, 248, 0.1);
+  color: #fff;
+  font-weight: 500;
+  border-left: 4px solid #38bdf8;
+}
+.nav-link.router-link-exact-active i.fa-fw {
+  color: #38bdf8;
+}
+.nav-item-header {
+  padding: 10px 25px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #8f9ca9;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 1rem;
+}
+.sidebar-submenu {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding-left: 15px;
+}
+.sidebar-submenu .nav-link {
+  font-size: 0.9rem;
+  padding-left: 2.5rem;
+}
+.sidebar-submenu .nav-link:hover {
+  background-color: transparent;
+  color: #38bdf8;
+}
+.sidebar-submenu .nav-link.router-link-exact-active {
+  background-color: transparent;
+  color: #fff;
+  font-weight: bold;
+}
+.nav-link[data-bs-toggle="collapse"]::after {
+  content: '\f078';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  margin-left: auto;
+  transition: transform 0.3s;
+}
+.nav-link[data-bs-toggle="collapse"]:not(.collapsed)::after {
+  transform: rotate(180deg);
+}
+.nav-item > .router-link-active {
+  background-color: rgba(56, 189, 248, 0.1);
+  color: #fff;
+}
+
+/* Style hiện tại giữ nguyên, thêm style cho nút đăng xuất nếu cần */
+.nav-link:hover {
+  background-color: rgba(56, 189, 248, 0.1);
+  color: #38bdf8;
+}
+
+/* Style cho mục menu đang được chọn (active) */
+.nav-link.router-link-exact-active {
+  background-color: rgba(56, 189, 248, 0.1); /* Màu nền highlight nhẹ nhàng */
+  color: #fff;
+  font-weight: 500;
+  border-left: 4px solid #38bdf8;
+}
+.nav-link.router-link-exact-active i.fa-fw {
+  color: #38bdf8;
+}
+
+/* Thêm một tiêu đề nhỏ để phân nhóm menu */
+.nav-item-header {
+    padding: 10px 25px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #8f9ca9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 1rem;
+}
+
+/* Style cho menu con */
+.sidebar-submenu {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding-left: 15px;
+}
+.sidebar-submenu .nav-link {
+    font-size: 0.9rem;
+    padding-left: 2.5rem;
+}
+.sidebar-submenu .nav-link:hover {
+    background-color: transparent;
+    color: #38bdf8;
+}
+.sidebar-submenu .nav-link.router-link-exact-active {
+    background-color: transparent;
+    color: #fff;
+    font-weight: bold;
+}
+
+/* Thêm mũi tên chỉ xuống cho menu cha */
+.nav-link[data-bs-toggle="collapse"]::after {
+    content: '\f078';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    margin-left: auto;
+    transition: transform 0.3s;
+}
+
+/* Xoay mũi tên khi menu được mở */
+.nav-link[data-bs-toggle="collapse"]:not(.collapsed)::after {
+    transform: rotate(180deg);
+}
+
+/* Giữ cho menu cha active khi một trong các con của nó active */
+/* Vue Router tự động thêm class 'router-link-active' (không exact) cho link cha */
+.nav-item > .router-link-active {
+    background-color: rgba(56, 189, 248, 0.1);
+    color: #fff;
+}
+</style>
